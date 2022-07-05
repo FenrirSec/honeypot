@@ -1,6 +1,10 @@
 {
-    "\n#> ([A-z|0-9|\\s])+" : "%s: invalid command\n#> ",
+    "\n#> cd\n$" : "Command Result: This command has been disabled on this server.\n#> ",
+    "\n#> pwd\n$" : "/home/admin/\n#> ",
+    "\n#> ls\n$" : "file.txt doc.xlsx serv.conf\n#> ",
+    "\n#> ([A-z|0-9|\\s])+" : "Command Result: Invalid command.\n#> ",
     "\n\nUsername: ([A-z|0-9]+)\nPassword: admin\n" : "Welcome admin\n\n#> ",
-    "\n\nUsername: ([A-z|0-9]+)\nPassword: ([A-z|0-9]+)\n$" : "Invalid password\n\nUsername: ",
+    "\n\nUsername: admin\nPassword: ([A-z|0-9]+)\n$" : "Auth Result: Invalid password.\n\nUsername: ",
+    "\n\nUsername: ([A-z|0-9]+)\nPassword: ([A-z|0-9]+)\n$" : "Auth Result: Invalid user.\n\nUsername: ",
     "\n\nUsername: ([A-z|0-9]+)" : "Password: "
 }
