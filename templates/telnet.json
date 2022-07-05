@@ -1,0 +1,6 @@
+{
+    "\n#> ([A-z|0-9|\\s])+" : "%s: invalid command\n#> ",
+    "\n\nUsername: ([A-z|0-9]+)\nPassword: admin\n" : "Welcome admin\n\n#> ",
+    "\n\nUsername: ([A-z|0-9]+)\nPassword: ([A-z|0-9]+)\n$" : "Invalid password\n\nUsername: ",
+    "\n\nUsername: ([A-z|0-9]+)" : "Password: "
+}
