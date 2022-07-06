@@ -1,4 +1,5 @@
 import socket
+from binascii import hexlify
 
 class Protocol():
     def __init__(self, name, port, host, handler, banner=None, buffer_size=1024):
@@ -39,7 +40,10 @@ class Protocol():
             if c_sock in self.buffers.keys():
                 buf = self.buffers[c_sock]
                 self.log('Buffer is %s' %buf)
-                self.buffers[c_sock] += r.decode('UTF-8')
+                try:
+                    self.buffers[c_sock] += r.decode('UTF-8')
+                except Exception as e:
+                    self.buffers[c_sock] += hexlify(r).decode('UTF-8')
                 out = self.handler(self.buffers[c_sock])
                 if out:
                     c_sock.send(out.encode('UTF-8'))

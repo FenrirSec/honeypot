@@ -1,0 +1,10 @@
+{
+    "HELL?O\\s+([A-z|0-9|\\.]+)\n$": "250 Hello %s\n250 Auth\n",
+    "\n\\s?MAIL FROM\\s?:\\s?([<|A-z|0-9|\\.]+@[A-z|0-9|\\.|>]+)$": "250 OK - Mail from <%s>\n",
+    "\n\\s?RCPT TO\\s?:\\s?([<|A-z|0-9|\\.]+@[A-z|0-9|\\.|>]+)$": "250 OK - Recipient <%s>\n",
+    "\n\\s?(Data|DATA|data)\\s?\n$": "354 Send data. End with CRLF.CRLF\n",
+    "(Data|DATA|data)\\s?\n.*\n\\.\n$": "250 OK\n",
+    "\n\\.\n$": "250 OK\n",
+    "(Data|DATA|data)\n.*": "",
+    ".*": "500 Invalid Command.\n"
+}

@@ -1,0 +1,14 @@
+{
+    "\nUSER\\s+([A-z|0-9|\\-|\\s]+)\n$": "331 Please specify the password.\n",
+    "\nPASS\\s+password123[\r|\n]+$": "230 Login successful.\n",
+    "\nPASS\\s+([A-z|0-9|\\-|\\s]+)\n$": "530 Login incorrect.\n",
+    "\nHELP\\s?$": "214-The following commands are recognized.\nABOR ACCT ALLO APPE CDUP CWD  DELE EPRT EPSV FEAT HELP LIST MDTM MKD\n MODE NLST NOOP OPTS PASS PASV PORT PWD  QUIT REIN REST RETR RMD  RNFR\n RNTO SITE SIZE SMNT STAT STOR STOU STRU SYST TYPE USER XCUP XCWD XMKD\n XPWD XRMD",
+    "\nCWD\\s?[\n|\r]+$": "550 Failed to change directory.\n",
+    "\nCWD\\s?([A-z|0-9|\\/])+[\n|\r]+$": "550 Failed to change directory.\n",
+    "\nPWD\\s?[\n|\r]+$": "257 \"/var/www/\" is the current directory\n",
+    "\nAUTH\\s+(TLS|SSL)\\s?[\n|\r]+$": "530 Please login with USER and PASS.\n",
+    "\nTYPE\\s+I\\s?[\n|\r]+$": "200 Switching to Binary mode.\n",
+    "\nPASV\\s?[\n|\r]+$": "227 Entering Passive Mode (45,77,62,203,49,114).\n",
+    "\nLIST\\s?[\n|\r]+$": "200 PORT command successful\n150 Opening ASCII mode data connection for /bin/ls.\r\n-rw------- 1 peter 848 Dec 14 11:22 00README.txt\r\n226 Transfer complete.\r\n",
+    ".*": "500 Unknown command.\n"
+}

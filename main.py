@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 
 from select import select
-from protocols import protocol, telnet
+from protocols import telnet, smtp, ssh, http, ftp
 
 HOST=""
 LOOP=True
 
 def	main():
     sockets = {}
-    protocols = [telnet.init("")]
+    protocols = [
+        telnet.init(""),
+        smtp.init(""),
+        ssh.init(""),
+        http.init(""),
+        ftp.init("")
+    ]
     while LOOP:
         r_sockets = []
         w_sockets = []
