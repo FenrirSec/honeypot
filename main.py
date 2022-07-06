@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from select import select
-from protocols import telnet, smtp, ssh, http, ftp
+from protocols import telnet, smtp, ssh, http, ftp, adb
 
 HOST=""
 LOOP=True
@@ -13,7 +13,8 @@ def	main():
         smtp.init(""),
         ssh.init(""),
         http.init(""),
-        ftp.init("")
+        ftp.init(""),
+        adb.init("")
     ]
     while LOOP:
         r_sockets = []
