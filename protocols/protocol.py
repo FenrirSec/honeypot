@@ -37,7 +37,11 @@ class Protocol():
             self.buffers[client] = self.banner if self.banner else ""
                 
     def read(self, c_sock):
-        r = c_sock.recv(self.buffer_size)
+        r = None
+        try:
+            r = c_sock.recv(self.buffer_size)
+        except Exception as e:
+            self.clients.remove(c_sock)
         if r:
             self.log('Got data %s' %r)
             self.logger.log(self, r, c_sock)
@@ -52,7 +56,6 @@ class Protocol():
                     c_sock.send(out.encode('UTF-8'))
                     self.log('Answering %s' %out, "DEBUG")
                     self.buffers[c_sock] += out
-#                self.log('Buffer is %s' %self.buffers[c_sock], "DEBUG")
     
     def handle_msg(self):
         return
