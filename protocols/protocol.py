@@ -2,7 +2,7 @@ import socket
 from binascii import hexlify
 
 class Protocol():
-    def __init__(self, name, port, host, handler, banner=None, buffer_size=1024):
+    def __init__(self, name, port, host, handler, logger, banner=None, buffer_size=1024):
         self.name = name
         self.port = port
         self.host = host
@@ -12,6 +12,7 @@ class Protocol():
         self.banner = banner
         self.buffers = {}
         self.handler = handler
+        self.logger = logger
 
     def log(self, msg, level="LOG"):
         if level == "LOG":
@@ -39,6 +40,7 @@ class Protocol():
         r = c_sock.recv(self.buffer_size)
         if r:
             self.log('Got data %s' %r)
+            self.logger.log(self, r, c_sock)
             if c_sock in self.buffers.keys():
                 buf = self.buffers[c_sock]
                 try:

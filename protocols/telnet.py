@@ -23,8 +23,8 @@ User Access Verification
 
 Username: """
 
-def init(host):
+def init(host, logger):
     f = Faker('templates/telnet.json')
-    p = Protocol('Telnet', 23, host, f.handle, BANNER)
+    p = Protocol('Telnet', 23, host, f.handle, logger, BANNER)
     p.listen()
     return p

@@ -4,8 +4,8 @@ from datetime import datetime
 
 BANNER= "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5\n"
 
-def init(host):
+def init(host, logger):
     f = Faker('templates/ssh.json')
-    p = Protocol('SSH', 22, host, f.handle, BANNER)
+    p = Protocol('SSH', 22, host, f.handle, logger, BANNER)
     p.listen()
     return p

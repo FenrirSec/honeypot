@@ -11,13 +11,13 @@ logger = Logger(open("logs/log.txt", "a+"))
 def	main():
     sockets = {}
     protocols = [
-        telnet.init(HOST),
-        smtp.init(HOST),
-        ssh.init(HOST),
-        http.init(HOST),
-        ftp.init(HOST),
-        adb.init(HOST),
-        pop.init(HOST)
+        telnet.init(HOST, logger),
+        smtp.init(HOST, logger),
+        ssh.init(HOST, logger),
+        http.init(HOST, logger),
+        ftp.init(HOST, logger),
+        adb.init(HOST, logger),
+        pop.init(HOST, logger)
     ]
     for p in protocols:
         sockets[p.socket.fileno()] = p
