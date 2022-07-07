@@ -15,8 +15,10 @@ class Protocol():
 
     def log(self, msg, level="LOG"):
         if level == "LOG":
-            print("[%s] %s" %(self.name, msg))
-        
+            print("(LOG)[%s] %s" %(self.name, msg))
+        if level == "DEBUG":
+            print("(DEBUG)[%s] %s" %(self.name, msg))
+
     def listen(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -39,7 +41,6 @@ class Protocol():
             self.log('Got data %s' %r)
             if c_sock in self.buffers.keys():
                 buf = self.buffers[c_sock]
-                self.log('Buffer is %s' %buf)
                 try:
                     self.buffers[c_sock] += r.decode('UTF-8')
                 except Exception as e:
@@ -47,7 +48,9 @@ class Protocol():
                 out = self.handler(self.buffers[c_sock])
                 if out:
                     c_sock.send(out.encode('UTF-8'))
+                    self.log('Answering %s' %out, "DEBUG")
                     self.buffers[c_sock] += out
+#                self.log('Buffer is %s' %self.buffers[c_sock], "DEBUG")
     
     def handle_msg(self):
         return

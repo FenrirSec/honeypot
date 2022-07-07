@@ -1,0 +1,12 @@
+{
+    "CAPA\\s?[\r|\n]+$": "+OK Capability list follows\r\nTOP\r\nUSER\r\nLOGIN-DELAY 900\r\nEXPIRE 60\r\n.\r\n",
+    "AUTH\\s?[\r|\n]+$": "-ERR An authentication mechanism MUST be entered\r\n",
+    "STAT\\s?[\r|\n]+$": "+OK 2 5467\r\n",
+    "USER\\s+([A-z|0-9|@|\\.])+[\r|\n]+$": "+OK Accepted, password please\r\n",
+    "PASS\\s+.*$": "+OK Mailbox open, 2 messages\r\n",
+    "LIST\\s?[\r\n]+$": "+OK 2 messages (320 octets)\r\n1 120\r\n2 200\r\n.\r\n",
+    "RETR\\s1\\s+[\r|\n]+$": "+OK 48 octets\r\nSubject: Hello Mr.\r\n\r\nHello, how are you doing?\r\n.\r\n",
+    "DELE\\s1\\s+[\r|\n]+$": "+OK Message deleted",
+    "QUIT\\s+[\r\n]+$": "+OK ? InterMail POP3 server signing off.\r\n",
+    ".*": "-ERR Invalid command; valid commands: USER, AUTH, QUIT\r\n"
+}

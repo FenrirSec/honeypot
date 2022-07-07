@@ -1,3 +1,4 @@
 {
+    "host::features=abb_exec,abb,apex,fixed_push_mkdir,stat_v2,fixed_push_symlink_timestamp,cmd,shell_v2": "host::eb22059493bd",
     ".*": "500 Unknown command.\n"
 }
