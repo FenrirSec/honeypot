@@ -53,7 +53,10 @@ class Protocol():
                     self.buffers[c_sock] += hexlify(r).decode('UTF-8')
                 out = self.handler(self.buffers[c_sock])
                 if out:
-                    c_sock.send(out.encode('UTF-8'))
+                    try:
+                        c_sock.send(out.encode('UTF-8'))
+                    except Exception as e:
+                        self.clients.remove(c_sock)
                     self.log('Answering %s' %out, "DEBUG")
                     self.buffers[c_sock] += out
     
