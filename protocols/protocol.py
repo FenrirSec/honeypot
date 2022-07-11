@@ -32,7 +32,11 @@ class Protocol():
             client, address = self.socket.accept()
             self.log('Got a connection from %s:%s' %address)
             if self.banner:
-                client.send(self.banner.encode('UTF-8'))
+                try:
+                    client.send(self.banner.encode('UTF-8'))
+                except Exception as e:
+                    print(e)
+                    return
             self.clients.append(client)
             self.buffers[client] = self.banner if self.banner else ""
                 
