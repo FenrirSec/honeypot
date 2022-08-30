@@ -2,11 +2,11 @@
 
 from logger import Logger
 from select import select
-from protocols import telnet, smtp, ssh, http, ftp, adb, pop
+from protocols import telnet, smtp, ssh, http, ftp, adb, pop, dns
 
 HOST=""
 LOOP=True
-logger = Logger(open("logs/log.txt", "a+"))
+logger = Logger(open("logs/log.txt", "a+", encoding="latin-1"))
 
 def	main():
     sockets = {}
@@ -17,7 +17,8 @@ def	main():
         http.init(HOST, logger),
         ftp.init(HOST, logger),
         adb.init(HOST, logger),
-        pop.init(HOST, logger)
+        pop.init(HOST, logger),
+        dns.init(HOST, logger)
     ]
     for p in protocols:
         sockets[p.socket.fileno()] = p
