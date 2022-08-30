@@ -51,12 +51,14 @@ git clone https://github.com/FenrirSec/honeypot
 
 # What is working ?
 
-- [] Telnet
-- [] POP
-- [] SMTP
-- [] POP
-- [] HTTP
-- [] ADB
+- [] Telnet :white_check_mark:
+- [] POP :white_check_mark:
+- [] SMTP :white_check_mark:
+- [] POP :white_check_mark:
+- [] HTTP :white_check_mark:
+- [] ADB :white_check_mark:
+- [] DNS :white_check_mark:
+- [] SSH :x:
 
 
 
