@@ -8,7 +8,12 @@
 
 - [] Telnet
 - [] POP
-- [] SMTP?
+- [] SMTP
+- [] POP
+- [] HTTP
+- [] ADB
+
+
 
 ---
 
