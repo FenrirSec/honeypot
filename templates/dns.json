@@ -1,0 +1,48 @@
+curl -s https://dns.google.com/resolve\?name=twitter.com\&type=MX | jq
+{
+  "Status": 0,
+  "TC": false,
+  "RD": true,
+  "RA": true,
+  "AD": false,
+  "CD": false,
+  "Question": [
+    {
+      "name": "twitter.com.",
+      "type": 15
+    }
+  ],
+  "Answer": [
+    {
+      "name": "twitter.com.",
+      "type": 15,
+      "TTL": 600,
+      "data": "20 alt1.aspmx.l.google.com."
+    },
+    {
+      "name": "twitter.com.",
+      "type": 15,
+      "TTL": 600,
+      "data": "10 aspmx.l.google.com."
+    },
+    {
+      "name": "twitter.com.",
+      "type": 15,
+      "TTL": 600,
+      "data": "30 ASPMX3.GOOGLEMAIL.com."
+    },
+    {
+      "name": "twitter.com.",
+      "type": 15,
+      "TTL": 600,
+      "data": "30 ASPMX2.GOOGLEMAIL.com."
+    },
+    {
+      "name": "twitter.com.",
+      "type": 15,
+      "TTL": 600,
+      "data": "20 alt2.aspmx.l.google.com."
+    }
+  ],
+  "Comment": "Response from 108.59.161.34."
+}
