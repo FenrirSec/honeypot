@@ -28,6 +28,16 @@ class Logger():
         print(line)
         self.save(line)
 
+    def log_raw(self, protocol_name, protocol_port, client_ip, data, level="log"):
+        line = None
+        try:
+            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol_name, protocol_port, client_ip, data.decode('UTF-8').replace(';', '%3B').replace('\n', '\\n').replace('\r', '\\r'))
+        except Exception as e:
+            print(e)
+            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol_name, protocol_port, client_ip, hexlify(data).decode('UTF-8'))
+        print(line)
+        self.save(line)
+
     def warn(self, protocol, data, client_socket):
         self.log(protocol, data, client_socket, "warn")
 

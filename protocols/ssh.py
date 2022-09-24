@@ -12,8 +12,9 @@ from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse
 from twisted.conch.checkers import InMemorySSHKeyDB, SSHPublicKeyChecker
 from twisted.python import components, log
 from twisted.cred import portal
-
-log.startLogging(sys.stderr)
+from twisted.conch.ssh.common import NS, getNS
+from twisted.cred import credentials
+from twisted.conch import error, interfaces
 
 ## Implementation examples
 ## https://docs.twistedmatrix.com/en/stable/conch/examples/
@@ -21,28 +22,25 @@ log.startLogging(sys.stderr)
 SERVER_RSA_PRIVATE = "keys/ssh_host_rsa_key"
 SERVER_RSA_PUBLIC = "keys/ssh_host_rsa_key.pub"
 
-PRIMES = {
-    2048: [
-        (
-            2,
-            int(
-                "4217939"
-            ),
-        )
-    ],
-    4096: [
-        (
-            2,
-            int(
-                "4112035938859"
-            ),
-        )
-    ],
-}
+PRIMES = { 2048: [(2,int("4217939"),)], 4096: [(2,int("4112035938859"),)], }
 
-
+PORT = 22
 BANNER= "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5\n"
 
+logger = None
+
+log.startLogging(sys.stderr)
+
+class AuthServer(userauth.SSHUserAuthServer):
+    def auth_password(self, packet):
+        addr = self.transport.getPeer().address.host
+        password = getNS(packet[1:])[0]
+        logger.log_raw('SSH', PORT, addr, 'failed login with {} : {}'.format(self.user, password).encode('UTF-8'))
+        c = credentials.UsernamePassword(self.user, password)
+        return self.portal.login(c, None, interfaces.IConchUser)\
+                          .addErrback(self._ebPassword)
+      
+    
 @implementer(portal.IRealm)
 class ExampleRealm:
     def requestAvatar(self, avatarId, mind, *interfaces):
@@ -52,7 +50,7 @@ class ExampleFactory(factory.SSHFactory):
     protocol = SSHServerTransport
 
     services = {
-        b"ssh-userauth": userauth.SSHUserAuthServer,
+        b"ssh-userauth": AuthServer,
         b"ssh-connection": connection.SSHConnection,
     }
 
@@ -70,11 +68,14 @@ class ExampleFactory(factory.SSHFactory):
     def getPrimes(self):
         return PRIMES
 
-def ssh_handler(data):
-    
+def ssh_handler(data):    
     print(data)
     return f.handle(data)
 
-def init(host, logger):
+def init(host, global_logger):
+    global logger
+    logger = global_logger
     f = Faker('templates/ssh.json')
-    reactor.listenTCP(5022, ExampleFactory())
+    factory = ExampleFactory()
+    return reactor.listenTCP(PORT, factory)
+
