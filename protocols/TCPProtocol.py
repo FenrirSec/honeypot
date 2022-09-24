@@ -36,9 +36,6 @@ class TCPProtocol(Protocol):
         self.logger = logger
         self.buffer_size = buffer_size
 
-    def init():
-        return
-        
     def log(self, msg, level="LOG"):
         if level == "LOG":
             print("(LOG)[%s] %s" %(self.name, msg))
@@ -61,9 +58,11 @@ class TCPProtocol(Protocol):
         if self.banner:
             self.transport.write(self.banner.encode('UTF-8'))
             self.buffers[self.transport.getPeer()] = self.banner
+            self.log('{} opened a connection'.format(self.transport.getPeer().host))
 
     def connectionLost(self, reason):
         del self.buffers[self.transport.getPeer()]
+        self.log('{} closed the connection'.format(self.transport.getPeer().host))
 
     def listen(self):
         endpoint = TCP4ServerEndpoint(reactor, self.port)
