@@ -36,7 +36,7 @@ class AuthServer(userauth.SSHUserAuthServer):
             self.supportedAuthentications.append(b'password')
         addr = self.transport.getPeer().address.host
         password = getNS(packet[1:])[0]
-        logger.log_raw('SSH', PORT, addr, 'failed login with {} : {}'.format(self.user, password).encode('UTF-8'))
+        logger.log_raw('SSH', PORT, addr, 'failed login with {} : {}'.format(self.user.decode('utf-8'), password.decode('utf-8')).encode('UTF-8'))
         c = credentials.UsernamePassword(self.user, password)
         return self.portal.login(c, None, interfaces.IConchUser)\
                           .addErrback(self._ebPassword)
