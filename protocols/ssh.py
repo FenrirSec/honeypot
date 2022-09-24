@@ -1,7 +1,6 @@
 import sys
 
 from zope.interface import implementer
-from .protocol import Protocol
 from faker import Faker
 from datetime import datetime
 from twisted.internet import reactor
@@ -19,13 +18,13 @@ from twisted.conch import error, interfaces
 ## Implementation examples
 ## https://docs.twistedmatrix.com/en/stable/conch/examples/
 
+PORT = 22
+BANNER= "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5\n"
+
 SERVER_RSA_PRIVATE = "keys/ssh_host_rsa_key"
 SERVER_RSA_PUBLIC = "keys/ssh_host_rsa_key.pub"
 
 PRIMES = { 2048: [(2,int("4217939"),)], 4096: [(2,int("4112035938859"),)], }
-
-PORT = 22
-BANNER= "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5\n"
 
 logger = None
 
@@ -33,6 +32,8 @@ log.startLogging(sys.stderr)
 
 class AuthServer(userauth.SSHUserAuthServer):
     def auth_password(self, packet):
+        if 'password' not in self.supportedAuthentications:
+            self.supportedAuthentications.append(b'password')
         addr = self.transport.getPeer().address.host
         password = getNS(packet[1:])[0]
         logger.log_raw('SSH', PORT, addr, 'failed login with {} : {}'.format(self.user, password).encode('UTF-8'))
@@ -55,7 +56,8 @@ class ExampleFactory(factory.SSHFactory):
     }
 
     def __init__(self):
-        passwdDB = InMemoryUsernamePasswordDatabaseDontUse(user="password")
+        users = {"admin":"admin123"}
+        passwdDB = InMemoryUsernamePasswordDatabaseDontUse(**users)
         sshDB = SSHPublicKeyChecker(InMemorySSHKeyDB({b"user": []}))
         self.portal = portal.Portal(ExampleRealm(), [passwdDB, sshDB])
 

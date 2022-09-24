@@ -11,6 +11,7 @@ LOOP=True
 logger = Logger(open("logs/log.txt", "a+"))
 protos = []
 sockets = []
+twisted_sockets = []
 
 def     loop():
     print(loop)
@@ -21,8 +22,15 @@ def     loop():
     for p in protos:
         r_sockets = r_sockets + p.get_read_sockets()
         w_sockets = w_sockets + p.get_write_sockets()
+
+    for s in twisted_sockets:
+        r_sockets.append(s)
+        w_sockets.append(s)
+        e_sockets.append(s)
     
     r, w, e = select(r_sockets, w_sockets, e_sockets)
+    reactor.wakeUp()
+    
     for sock in r:
         if sock.fileno() in sockets.keys():
             p = sockets[sock.fileno()]
@@ -32,14 +40,26 @@ def     loop():
             for p in protos:
                 if sock in p.clients:
                     p.read(sock)
+
+    for sock in w:
+        print(sock)
+
+    for sock in e:
+        print(sock)
+        if sock.fileno() in sockets.keys():
+            sockets.remove(sock.fileno())
     return
 
 def	main():
     global protos
     global sockets
+    global twisted_sockets
     sockets = {}
+    
     # Twisted init
-    ssh.init(HOST, logger)
+    twisted_sockets = [
+        ssh.init(HOST, logger).socket
+    ]
 
     # Non-twisted init
     protos = [
