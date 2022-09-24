@@ -18,13 +18,13 @@ class Logger():
         if type(self.dest) == io.TextIOWrapper:
             self.dest.write(line)
 
-    def log(self, protocol, data, client_socket, level="log"):
+    def log(self, protocol, data, addr, level="log"):
         line = None
         try:
-            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, client_socket.getsockname()[0], data.decode('UTF-8').replace(';', '%3B').replace('\n', '\\n').replace('\r', '\\r'))
+            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr.host, data.decode('UTF-8').replace(';', '%3B').replace('\n', '\\n').replace('\r', '\\r'))
         except Exception as e:
             print(e)
-            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, client_socket.getsockname()[0], hexlify(data).decode('UTF-8'))
+            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr,host, hexlify(data).decode('UTF-8'))
         print(line)
         self.save(line)
 
@@ -38,8 +38,8 @@ class Logger():
         print(line)
         self.save(line)
 
-    def warn(self, protocol, data, client_socket):
-        self.log(protocol, data, client_socket, "warn")
+    def warn(self, protocol, data, addr):
+        self.log(protocol, data, addr, "warn")
 
-    def debug(self):
-        self.log(protocol, data, client_socket, "debug")
+    def debug(self, protocol, data, addr):
+        self.log(protocol, data, addr, "debug")

@@ -10,6 +10,7 @@ class Faker():
             self.entries[re.compile(key)] = data[key]
 
     def handle(self, buf):
+        print(buf)
         for re in self.entries.keys():
             out = re.search(buf)
             if out:

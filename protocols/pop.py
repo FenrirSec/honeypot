@@ -1,11 +1,11 @@
-from .protocol import Protocol
+from .TCPProtocol import *
 from faker import Faker
-from datetime import datetime
 
 BANNER= "+OK Dovecot Ready.\r\n"
 
 def init(host, logger):
     f = Faker('templates/pop.json')
-    p = Protocol('POP', 110, host, f.handle, logger, BANNER)
+    factory = TCPProtocolFactory('POP', 110, host, f.handle, logger, BANNER)
+    p = factory.buildProtocol(host)
     p.listen()
     return p

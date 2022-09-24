@@ -1,4 +1,4 @@
-from .protocol import Protocol
+from .TCPProtocol import TCPProtocol, TCPProtocolFactory
 from faker import Faker
 
 BANNER= """
@@ -23,8 +23,11 @@ User Access Verification
 
 Username: """
 
+
+f = Faker('templates/telnet.json')
+
 def init(host, logger):
     f = Faker('templates/telnet.json')
-    p = Protocol('Telnet', 23, host, f.handle, logger, BANNER)
+    factory = TCPProtocolFactory('Telnet', 23, host, f.handle, logger, BANNER)
+    p = factory.buildProtocol(host)
     p.listen()
-    return p

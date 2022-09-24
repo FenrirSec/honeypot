@@ -1,4 +1,4 @@
-from .protocol import Protocol
+from .TCPProtocol import *
 from faker import Faker
 from datetime import datetime
 
@@ -6,6 +6,7 @@ BANNER= "220-company.biz ESMTP #1 %s\n220-We do not authorize the user of this s
 
 def init(host, logger):
     f = Faker('templates/smtp.json')
-    p = Protocol('SMTP', 25, host, f.handle, logger, BANNER)
+    factory = TCPProtocolFactory('SMTP', 25, host, f.handle, logger, BANNER)
+    p = factory.buildProtocol(host)
     p.listen()
     return p

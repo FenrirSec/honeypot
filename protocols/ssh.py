@@ -11,7 +11,7 @@ from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse
 from twisted.conch.checkers import InMemorySSHKeyDB, SSHPublicKeyChecker
 from twisted.python import components, log
 from twisted.cred import portal
-from twisted.conch.ssh.common import NS, getNS
+from twisted.conch.ssh.common import getNS
 from twisted.cred import credentials
 from twisted.conch import error, interfaces
 
@@ -43,11 +43,11 @@ class AuthServer(userauth.SSHUserAuthServer):
       
     
 @implementer(portal.IRealm)
-class ExampleRealm:
+class SSHRealm:
     def requestAvatar(self, avatarId, mind, *interfaces):
         return super(self, avatarId, mind, interfaces)
 
-class ExampleFactory(factory.SSHFactory):
+class SSHFactory(factory.SSHFactory):
     protocol = SSHServerTransport
 
     services = {
@@ -59,7 +59,7 @@ class ExampleFactory(factory.SSHFactory):
         users = {"admin":"admin123"}
         passwdDB = InMemoryUsernamePasswordDatabaseDontUse(**users)
         sshDB = SSHPublicKeyChecker(InMemorySSHKeyDB({b"user": []}))
-        self.portal = portal.Portal(ExampleRealm(), [passwdDB, sshDB])
+        self.portal = portal.Portal(SSHRealm(), [passwdDB, sshDB])
 
     def getPublicKeys(self):
         return {b"ssh-rsa": keys.Key.fromFile(SERVER_RSA_PUBLIC)}
@@ -78,6 +78,6 @@ def init(host, global_logger):
     global logger
     logger = global_logger
     f = Faker('templates/ssh.json')
-    factory = ExampleFactory()
+    factory = SSHFactory()
     return reactor.listenTCP(PORT, factory)
 
