@@ -41,6 +41,9 @@ class AuthServer(userauth.SSHUserAuthServer):
         return self.portal.login(c, None, interfaces.IConchUser)\
                           .addErrback(self._ebPassword)
       
+
+class SSHDemoAvatar(avatar.ConchUser):
+    return
     
 @implementer(portal.IRealm)
 class SSHRealm:

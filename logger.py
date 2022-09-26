@@ -24,7 +24,7 @@ class Logger():
             line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr.host, data.decode('UTF-8').replace(';', '%3B').replace('\n', '\\n').replace('\r', '\\r'))
         except Exception as e:
             print(e)
-            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr,host, hexlify(data).decode('UTF-8'))
+            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr.host, hexlify(data).decode('UTF-8'))
         print(line)
         self.save(line)
 
