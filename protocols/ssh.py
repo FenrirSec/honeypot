@@ -42,9 +42,6 @@ class AuthServer(userauth.SSHUserAuthServer):
                           .addErrback(self._ebPassword)
       
 
-class SSHDemoAvatar(avatar.ConchUser):
-    return
-    
 @implementer(portal.IRealm)
 class SSHRealm:
     def requestAvatar(self, avatarId, mind, *interfaces):
