@@ -61,7 +61,8 @@ class TCPProtocol(Protocol):
             self.log('{} opened a connection'.format(self.transport.getPeer().host))
 
     def connectionLost(self, reason):
-        del self.buffers[self.transport.getPeer()]
+        if self.transport.getPeer() in self.buffers:
+            del self.buffers[self.transport.getPeer()]
         self.log('{} closed the connection'.format(self.transport.getPeer().host))
 
     def listen(self):
