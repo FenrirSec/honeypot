@@ -57,8 +57,8 @@ class TCPProtocol(Protocol):
     def connectionMade(self):
         if self.banner:
             self.transport.write(self.banner.encode('UTF-8'))
-            self.buffers[self.transport.getPeer()] = self.banner
-            self.log('{} opened a connection'.format(self.transport.getPeer().host))
+        self.buffers[self.transport.getPeer()] = self.banner
+        self.log('{} opened a connection'.format(self.transport.getPeer().host))
 
     def connectionLost(self, reason):
         if self.transport.getPeer() in self.buffers:
