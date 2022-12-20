@@ -47,6 +47,8 @@ class TCPProtocol(Protocol):
         self.logger.log(self, data, self.transport.getPeer())
         host = self.transport.getPeer().host
         port = self.transport.getPeer().port
+        if self.buffers[self.transport.getPeer()] is None:
+            self.buffers[self.transport.getPeer()] = ""        
         self.buffers[self.transport.getPeer()] += data.decode('UTF-8')
         buf = self.buffers[self.transport.getPeer()]
         answer = self.handler(buf)
