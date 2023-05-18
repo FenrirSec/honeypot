@@ -1,6 +1,6 @@
 {
-    "GET / HTTP/([0-9|\\.]+)\r\n": "HTTP/%s 200 OK\nServer: Apache/2.2.14 (Win32)\nContent-Length: 12\nContent-Type: text/html\n\nHello, world\n",
-    "GET /([A-z|0-9|\\-|_|\\.]) HTTP/([0-9|\\.]+)\r\n": "HTTP/%s 200 OK\nServer: Apache/2.2.14 (Win32)\nContent-Length: 12\nContent-Type: text/html\n\nHello, world\n",
-    "POST /([A-z|0-9|\\-|_|\\.]) HTTP/([0-9|\\.]+)\r\n": "HTTP/%s 201 OK\nServer: Apache/2.2.14 (Win32)\nContent-Length: 12\nContent-Type: text/html\n\nHello, world\n",
-    ".*": "HTTP/%s 201 OK\nServer: Apache/2.2.14 (Win32)\nContent-Length: 12\nContent-Type: text/html\n\nHello, world\n"
+    "GET / HTTP/([0-9|\\.]+)\r\n": "HTTP/%s 200 OK\nServer: Apache/2.2.14 (Win32)\nContent-Length: 12\r\nContent-Type: text/html\n\nHello, world\n",
+    "GET /([A-z|0-9|\\-|_|\\.]) HTTP/([0-9|\\.]+)\r\n": "HTTP/%s 200 OK\nServer: Apache/2.2.14 (Win32)\r\nContent-Length: 12\nContent-Type: text/html\n\nHello, world\n",
+    "POST /([A-z|0-9|\\-|_|\\.]) HTTP/([0-9|\\.]+)\r\n": "HTTP/%s 201 OK\nServer: Apache/2.2.14 (Win32)\r\nContent-Length: 12\nContent-Type: text/html\n\nHello, world\n",
+    ".*": "HTTP/%s 201 OK\nServer: Apache/2.2.14 (Win32)\nContent-Length: 12\nContent-Type: text/html\r\nHello, world\n"
 }
