@@ -14,7 +14,7 @@ class Faker():
 
     def handle(self, buf, data=None):
         for re in self.entries.keys():
-            if re.startswith('0x'):
+            if isinstance(re, str) and re.startswith('0x'):
                 if re[2:] in data.hex():
                     return self.entries[re]
             else:
