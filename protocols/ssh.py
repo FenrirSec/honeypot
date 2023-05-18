@@ -99,7 +99,8 @@ class SSHAvatar(avatar.ConchUser):
         return None
 
     def execCommand(self, protocol, cmd):
-        pass
+        addr = self.conn.transport.transport.getPeer().host
+        logger.log_raw('SSH', PORT, addr, ('Non-interactive command from user %s: %s' %(self.user.decode('UTF-8'), cmd.decode('UTF-8'))).encode('UTF-8'))
 
     def closed(self):
         pass
