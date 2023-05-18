@@ -1,3 +1,6 @@
+import struct
+import codecs
+import binascii
 
 """
 The transport layer deals in "messages", which consist of a 24 byte
@@ -21,6 +24,38 @@ struct message {
 
 """
 
+"""
+I was reading the packets wrong this whole time
+because I misunderstood the protocol, 
+each section is 4 bytes (8*4 = 32 bits) 
+and not 6 !!!
+
+Ex : This code extract from https://github.com/sidorares/node-adbhost/blob/master/lib/packet.js
+
+Command - 4 bytes
+arg0 - 4 bytes
+arg1 - 4 bytes
+
+etc...
+
+AdbPacket.prototype.toBuffer = function() {
+  var dataLength = 0;
+  if (this.data)
+     dataLength = this.data.length;
+  var buffer = new Buffer(24 + dataLength);
+  buffer.writeUInt32LE(this.command, 0);
+  buffer.writeUInt32LE(this.arg1, 4);
+  buffer.writeUInt32LE(this.arg2, 8);
+  buffer.writeUInt32LE(dataLength, 12);
+  buffer.writeUInt32LE(crc(this.data), 16);
+  buffer.writeUInt32LE(this.magic, 20);
+  if (dataLength > 0)
+    this.data.copy(buffer, 24);
+  return buffer;
+}
+
+"""
+
 def forgeADBPacket(command, arg0, arg1, data):
     magic = int.from_bytes(command, 'little') ^ 0xFFFFFFFF
 
@@ -32,9 +67,10 @@ def forgeADBPacket(command, arg0, arg1, data):
         arg1 = int.from_bytes(arg1, 'little')
     checksum = 0 # checksums are not required since ADB version 2
 
-    packet = struct.pack(_format, command, arg0, arg1, len(data), checksum, magic)
-    print('Forged ADB packet', packet, len(packet))
-    return packet + data
+    header = struct.pack(_format, command, arg0, arg1, len(data), checksum, magic)
+    print('Forged ADB header', header, len(header))
+    print('Packet:\n'+(header + data).hex())
+    return header + data
 
 def parseADBHeader(data):
     _format =  b'<6I'

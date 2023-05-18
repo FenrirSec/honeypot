@@ -1,6 +1,3 @@
-import struct
-import codecs
-import binascii
 from .TCPProtocol import *
 from faker import Faker
 
