@@ -7,13 +7,19 @@ class Faker():
         self.entries = {}
         data = json.load(open(filename))
         for key in data.keys():
-            self.entries[re.compile(key)] = data[key]
+            if not key.startswith('0x'):
+                self.entries[re.compile(key)] = data[key]
+            else:
+                self.entries[key] = data[key]
 
     def handle(self, buf, data=None):
-        print(buf)
         for re in self.entries.keys():
-            out = re.search(buf)
-            if out:
-                if '%s' in self.entries[re]:
-                   return self.entries[re] %out.group(1)
-                return self.entries[re]
+            if re.startswith('0x'):
+                if re[2:] in data.hex():
+                    return self.entries[re]
+            else:
+                out = re.search(buf)
+                if out:
+                    if '%s' in self.entries[re]:
+                        return self.entries[re] %out.group(1)
+                    return self.entries[re]
