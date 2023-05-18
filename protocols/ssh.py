@@ -125,20 +125,12 @@ class SSHRealm:
 
 class SSHTransport(transport.SSHServerTransport):
 
-    hadVersion = False
-
     def connectionMade(self):
         self.interactors = []
         self.ttylog_open = False
         transport.SSHServerTransport.connectionMade(self)
         addr = self.transport.getPeer().host
         logger.log_raw('SSH', PORT, addr, ('Got a connection request from %s'%addr).encode('UTF-8'))
-
-    def dataReceived(self, data):
-        transport.SSHServerTransport.dataReceived(self, data)
-        addr = self.transport.getPeer().host
-        if self.getPacket():
-            logger.log_raw('SSH', PORT, addr, ('Got data: %s' %self.getPacket()).encode('UTF-8'))
 
     def connectionLost(self, reason):
         addr = self.transport.getPeer()
