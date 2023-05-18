@@ -5,7 +5,7 @@ from faker import Faker
 from datetime import datetime
 from twisted.internet import reactor
 from twisted.conch import avatar, recvline, interfaces as conchinterfaces
-from twisted.conch.ssh import factory, keys, session
+from twisted.conch.ssh import factory, keys, session, transport
 from twisted.conch.ssh.transport import SSHServerTransport
 from twisted.conch.ssh import connection, factory, keys, session, userauth
 from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse
@@ -26,6 +26,8 @@ PORT = 22
 BANNER = "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.5\n"
 HEADER = "Last login: Thu May 18 01:07:54 2023 from 80.215.234.158\n"
 PS1 = "%s@vps$ "
+USERS = {"admin": b"admin123", "root": b"password"}
+
 
 SERVER_RSA_PRIVATE = "keys/ssh_host_rsa_key"
 SERVER_RSA_PUBLIC = "keys/ssh_host_rsa_key.pub"
@@ -43,10 +45,14 @@ class AuthServer(userauth.SSHUserAuthServer):
             self.supportedAuthentications.append(b'password')
         addr = self.transport.getPeer().address.host
         password = getNS(packet[1:])[0]
-        logger.log_raw('SSH', PORT, addr, 'failed login with {} : {}'.format(self.user.decode('utf-8'), password.decode('utf-8')).encode('UTF-8'))
         c = credentials.UsernamePassword(self.user, password)
         login = self.portal.login(c, None, interfaces.IConchUser)\
                           .addErrback(self._ebPassword)
+        if self.user.decode('utf-8') in USERS.keys() \
+                and USERS[self.user.decode('utf-8')] == password:
+            logger.log_raw('SSH', PORT, addr, 'Successful login with {} : {}'.format(self.user.decode('utf-8'), password.decode('utf-8')).encode('UTF-8'))
+        else:
+            logger.log_raw('SSH', PORT, addr, 'failed login with {} : {}'.format(self.user.decode('utf-8'), password.decode('utf-8')).encode('UTF-8'))
         return login
 
 
@@ -59,6 +65,8 @@ class FakeSSHProtocol(recvline.HistoricRecvLine):
         self.terminal.write(HEADER)
         self.terminal.nextLine()
         self.showPrompt()
+        addr = self.user.conn.transport.transport.getPeer().host
+        logger.log_raw('SSH', PORT, addr, ('Opened shell for user %s' %self.user.user.decode('UTF-8')).encode('UTF-8'))
  
     def showPrompt(self):
         self.terminal.write(PS1 %self.user.user.decode('UTF-8'))
@@ -68,6 +76,8 @@ class FakeSSHProtocol(recvline.HistoricRecvLine):
         f.handle(line)
         self.terminal.write(f.handle(line))
         self.showPrompt()
+        addr = self.user.conn.transport.transport.getPeer().host
+        logger.log_raw('SSH', PORT, addr, ('Command from user %s: %s' %(self.user.user.decode('UTF-8'), line)).encode('UTF-8'))
 
 @implementer(conchinterfaces.ISession)
 class SSHAvatar(avatar.ConchUser):
@@ -99,7 +109,7 @@ class SSHAvatar(avatar.ConchUser):
 
     def windowChanged(self):
         pass
-    
+
 class SSHRealm:
     def __init__(self):
         self.prompt = HEADER
@@ -112,8 +122,31 @@ class SSHRealm:
         else:
             raise Exception("No supported interfaces found.")
 
+
+class SSHTransport(transport.SSHServerTransport):
+
+    hadVersion = False
+
+    def connectionMade(self):
+        self.interactors = []
+        self.ttylog_open = False
+        transport.SSHServerTransport.connectionMade(self)
+        addr = self.transport.getPeer().host
+        logger.log_raw('SSH', PORT, addr, ('Got a connection request from %s'%addr).encode('UTF-8'))
+
+    def dataReceived(self, data):
+        transport.SSHServerTransport.dataReceived(self, data)
+        addr = self.transport.getPeer().host
+        if self.getPacket():
+            logger.log_raw('SSH', PORT, addr, ('Got data: %s' %self.getPacket()).encode('UTF-8'))
+
+    def connectionLost(self, reason):
+        addr = self.transport.getPeer()
+        logger.log_raw('SSH', PORT, addr, ('Connection lost from %s'%addr).encode('UTF-8'))
+        # super(self, reason)
+
 class SSHFactory(factory.SSHFactory):
-    protocol = SSHServerTransport
+    protocol = SSHTransport
 
     services = {
         b"ssh-userauth": AuthServer,
@@ -121,8 +154,7 @@ class SSHFactory(factory.SSHFactory):
     }
 
     def __init__(self):
-        users = {"admin": b"admin123", "root": b"password"}
-        passwdDB = InMemoryUsernamePasswordDatabaseDontUse(**users)
+        passwdDB = InMemoryUsernamePasswordDatabaseDontUse(**USERS)
         sshDB = SSHPublicKeyChecker(InMemorySSHKeyDB({b"user": []}))
         self.portal = portal.Portal(SSHRealm(), [passwdDB, sshDB])
 
