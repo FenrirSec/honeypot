@@ -1,7 +1,7 @@
+import codecs
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet import reactor
-
 from binascii import hexlify
 
 
@@ -48,13 +48,26 @@ class TCPProtocol(Protocol):
         host = self.transport.getPeer().host
         port = self.transport.getPeer().port
         if self.buffers[self.transport.getPeer()] is None:
-            self.buffers[self.transport.getPeer()] = ""        
-        self.buffers[self.transport.getPeer()] += data.decode('UTF-8')
+            self.buffers[self.transport.getPeer()] = ""
+        try:
+            self.buffers[self.transport.getPeer()] += data.decode('UTF-8')
+        except Exception as e:
+            self.buffers[self.transport.getPeer()] += data.hex()
+            print(e)
         buf = self.buffers[self.transport.getPeer()]
-        answer = self.handler(buf)
+        answer = self.handler(buf, data)
         if answer:
-            self.buffers[self.transport.getPeer()] += answer
-            self.transport.write(answer.encode('UTF-8'))
+            if isinstance(answer, str):
+                self.buffers[self.transport.getPeer()] += answer
+                if answer.startswith('0x'):
+                    self.transport.write(codecs.decode(answer[2:], 'hex_codec'))
+                else:
+                    self.transport.write(answer.encode('UTF-8'))
+            elif isinstance(answer, bytes):
+                self.buffers[self.transport.getPeer()] += answer.hex()
+                self.transport.write(answer)
+            else:
+                self.log('Unknown handler answer type : %s' %type(answer), DEBUG)
     
     def connectionMade(self):
         if self.banner:
