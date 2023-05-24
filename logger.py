@@ -1,9 +1,6 @@
-
-
 """
 Custom logger for honeypot
 """
-
 
 import io
 from binascii import hexlify
@@ -11,12 +8,6 @@ from datetime import datetime
 import requests
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
-
-
-
-
-
-
 
 class Logger():
 
@@ -30,10 +21,9 @@ class Logger():
             self.dest.write(line)
     
     def send_encrypted_data(self, data):
-        url = 'https://localhost:5000/test'
+        url = 'https://localhost:5000/requests'
         pub_key_path = 'public_key.txt'
 
-       
         with open(pub_key_path, 'r') as f:
             public_key = RSA.import_key(f.read())
        
@@ -47,8 +37,7 @@ class Logger():
 
         print(response.content.decode())
 
-    
-    
+       
     def log(self, protocol, data, addr, level="log"):
         line = None
         try:
@@ -58,7 +47,6 @@ class Logger():
             line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr.host, hexlify(data).decode('UTF-8'))
         print(line)
         self.save(line)
-
         self.send_encrypted_data(line)
 
     def log_raw(self, protocol_name, protocol_port, client_ip, data, level="log"):
