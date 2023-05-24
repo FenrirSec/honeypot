@@ -4,6 +4,7 @@ from logger import Logger
 from twisted.internet import ssl, reactor
 from protocols import telnet, smtp, ssh, http, ftp, adb, pop, https
 
+
 HOST=""
 logger = Logger(open("logs/log.txt", "a+"))
 
