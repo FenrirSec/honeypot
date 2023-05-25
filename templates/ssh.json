@@ -3,5 +3,7 @@
     "ls": "Documents Images Downloads Desktop\n",
     "pwd": "/home/admin\n",
     "cd": "",
-    ".*": "command not found\n"
+    ".*": "command not found\n",
+    "uname": "Linux\n",
+    "uname -a": "Linux Ubuntu 20.04 x86_64 x86_64 x86_64 GNU/Linux\n"
 }

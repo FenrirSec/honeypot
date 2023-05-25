@@ -7,6 +7,11 @@ fi
 
 INGRESS=$1
 
+echo "WARNING : This automatic setup script makes modifications to your system that might cause data loss and further issues."
+echo "Make sure you UNDERSTAND them and agree with them. Keep in mind that this script has solely been made to easen deployment"
+echo "of this honeypot on *throwaway* Ubuntu 20.04 servers."
+echo "Press ENTER to continue or CTRL + C to stop there."
+
 cd honeypot 2>/dev/null
 
 pip install -r requirements.txt

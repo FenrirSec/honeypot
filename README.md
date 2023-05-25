@@ -1,6 +1,16 @@
 # Honeypot
 
-// TODO find a better name
+Welcome to this repository!
+
+This project is between a medium and high interaction honeypot : external requests won't *actually* interact with an information system but will *pretend* to do so.
+
+How does it works?
+
+Basically, using RegExes, if a requests looks like a valid HTTP protocol GET request, it will match agains a rule and be answered with HTTP content.
+
+If another request looks like a SQL injection tentative on a WordPress, it might be anwered accordingly to simulate a WordPress environment.
+
+We aim to simulate interaction, but there is actually no potentially vulnerable database or filesystem for attackers to exploit.
 
 
 ---
@@ -9,47 +19,19 @@
 
 ## Prerequisites
 
-You need to install Python 3 and the libraries: logger, select , Faker, re, json , io, binascii, datetime
+- python3
+- python3-pip
+- openssl
 
-```
-pip3 install logger
-```
-```
-pip3 install select
-```
-```
-pip3 install faker
-```
-```
-pip3 install re
-```
-```
-pip3 install json
-```
-```
-pip3 install re
-```
-```
-pip3 install io
-```
-```
-pip3 install binascii
-```
-```
-pip3 install datetime
-```
-
- 
-# Installation
+> **Note** : As of today, deployment has been imagined with Debian-like systems in mind. More portable versions and companion scripts will come later.
 
 ```
 git clone https://github.com/FenrirSec/honeypot
 ```
 
-
 ---
 
-# What is working ?
+# Which protocols are working for the moment?
 
 - [] Telnet :white_check_mark:
 - [] POP :white_check_mark:
@@ -57,11 +39,14 @@ git clone https://github.com/FenrirSec/honeypot
 - [] POP :white_check_mark:
 - [] HTTP :white_check_mark:
 - [] ADB :white_check_mark:
-- [] DNS :white_check_mark:
-- [] SSH :x:
-
-
+- [] SSH :white_check_mark:
 
 ---
 
 # Todolist
+
+- Quality of life improvements
+- Add more potentially interesting protocols
+- Make RSA encryption MiTM proof with honeypot's private key verification
+- Make HTTPS management safer with Ingress server certificate pinning
+- Add templates to simulate IoT devices
