@@ -22,7 +22,7 @@ class Logger():
     
     def send_encrypted_data(self, data):
         url = 'https://localhost:5000/requests'
-        pub_key_path = 'public_key.txt'
+        pub_key_path = 'keys/server_key.pub'
 
         with open(pub_key_path, 'r') as f:
             public_key = RSA.import_key(f.read())
