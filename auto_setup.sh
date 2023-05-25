@@ -13,7 +13,7 @@ pip install -r requirements.txt
 mkdir keys
 ssh-keygen -q -N "" -f keys/ssh_host_rsa_key
 sed -i "s/localhost/$INGRESS/g" logger.py && echo $INGRESS
-curl --insecure https://217.69.9.89:5000/pubkey > keys/server_key.pub
+curl --insecure https://$INGRESS:5000/pubkey > keys/server_key.pub
 
 sed -i "s/#Port 22/Port 9101/g" /etc/ssh/sshd_config
 
