@@ -1,0 +1,4 @@
+INGRESS_SERVER=None
+INGRESS_SERVER_RSA_KEY="keys/ingress_key.pub"
+INGRESS_SERVER_HTTPS_CERT="keys/ingress.crt"
+DEBUG=False

@@ -18,7 +18,14 @@ pip install -r requirements.txt
 mkdir keys
 ssh-keygen -q -N "" -f keys/ssh_host_rsa_key
 sed -i "s/localhost/$INGRESS/g" logger.py && echo $INGRESS
-curl --insecure https://$INGRESS:5000/pubkey > keys/server_key.pub
+
+curl --insecure https://$INGRESS:5000/pubkey > keys/ingress_key.pub
+
+openssl s_client -showcerts -connect $INGRESS:5000 </dev/null 2>/dev/null|openssl x509  > keys/ingress.crt
+
+cp conf.py.example conf.py
+
+sed -i "s/INGRESS_SERVER=None/INGRESS_SERVER='$INGRESS'/" conf.py
 
 sed -i "s/#Port 22/Port 9101/g" /etc/ssh/sshd_config
 
