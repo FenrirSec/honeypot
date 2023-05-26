@@ -17,6 +17,7 @@ read
 
 cd honeypot 2>/dev/null
 
+apt-get update -y && apt-get install pip -y
 pip install -r requirements.txt
 mkdir keys
 ssh-keygen -q -N "" -f keys/ssh_host_rsa_key
@@ -36,11 +37,12 @@ sed -i "s/#Port 22/Port 9101/g" /etc/ssh/sshd_config
 
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout keys/server.key -out keys/server.crt
 
+echo
 echo "Your SSH configuration has been changed, you might be disconnected, please reconnect using the port 9101. Bye!"
 
 systemctl restart sshd
-systemctl stop nginx
-systemctl disable nginx
+systemctl stop nginx 2>/dev/null
+systemctl disable nginx 2>/dev/null
 ufw disable
 
 tmux new-session -s "honeypot" ./main.py
