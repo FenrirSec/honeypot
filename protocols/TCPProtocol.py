@@ -44,7 +44,7 @@ class TCPProtocol(Protocol):
                 
     def dataReceived(self, data):
         # self.log('Got data %s' %data)
-        self.logger.log(self, data, self.transport.getPeer().host)
+        self.logger.log(self, data, self.transport.getPeer())
         host = self.transport.getPeer().host
         port = self.transport.getPeer().port
         if self.buffers[self.transport.getPeer()] is None:
@@ -74,13 +74,13 @@ class TCPProtocol(Protocol):
             self.transport.write(self.banner.encode('UTF-8'))
         self.buffers[self.transport.getPeer()] = self.banner
         # self.log('{} opened a connection'.format(self.transport.getPeer().host))
-        self.logger.log(self, 'Connection opened', self.transport.getPeer().host)
+        self.logger.log(self, 'Connection opened', self.transport.getPeer())
 
     def connectionLost(self, reason):
         if self.transport.getPeer() in self.buffers:
             del self.buffers[self.transport.getPeer()]
         # self.log('{} closed the connection'.format(self.transport.getPeer().host))
-        self.logger.log(self, 'Connection closed', self.transport.getPeer().host)
+        self.logger.log(self, 'Connection closed', self.transport.getPeer())
 
     def listen(self):
         endpoint = TCP4ServerEndpoint(reactor, self.port)
