@@ -1,5 +1,6 @@
 Twisted==22.8.0
-cryptography
 bcrypt
 pyasn1
 PyCryptodome
+pyopenssl==22.0.0
+cryptography==38.0.4
