@@ -1,10 +1,8 @@
-# Honeypot
+# Honeypot 🕵️‍♂️
 
-Welcome to this repository!
+Welcome to our Honeypot repository! This project is designed as a medium to high interaction honeypot: external requests won't actually interact with a real information system but will convincingly pretend to do so.
 
-This project is between a medium and high interaction honeypot : external requests won't *actually* interact with an information system but will *pretend* to do so.
-
-How does it works?
+## How Does It Work? 🤔
 
 Basically, using RegExes, if a requests looks like a valid HTTP protocol GET request, it will match agains a rule and be answered with HTTP content.
 
@@ -12,41 +10,49 @@ If another request looks like a SQL injection tentative on a WordPress, it might
 
 We aim to simulate interaction, but there is actually no potentially vulnerable database or filesystem for attackers to exploit.
 
-
 ---
 
-# Getting Started
+## Getting Started 🚀
 
-## Prerequisites
+### Prerequisites
 
 - python3
 - python3-pip
 - openssl
 
-> **Note** : As of today, deployment has been imagined with Debian-like systems in mind. More portable versions and companion scripts will come later.
+> **Note**: Deployment is currently optimized for Debian-like systems. More portable versions and companion scripts are in development.
 
-```
+```bash
 git clone https://github.com/FenrirSec/honeypot
 ```
 
 ---
 
-# Which protocols are working for the moment?
+## Docker Deployment
 
-- [] Telnet :white_check_mark:
-- [] POP :white_check_mark:
-- [] SMTP :white_check_mark:
-- [] POP :white_check_mark:
-- [] HTTP :white_check_mark:
-- [] ADB :white_check_mark:
-- [] SSH :white_check_mark:
+```bash
+docker run --rm lupinfr/honeypot
+```
 
 ---
 
-# Todolist
+## Supported Protocols ✅
+
+- Telnet 
+- POP 
+- SMTP 
+- HTTP 
+- ADB 
+- SSH 
+
+---
+
+## Todolist 📝
 
 - Quality of life improvements
-- Add more potentially interesting protocols
+- Add more interesting protocols
 - Make RSA encryption MiTM proof with honeypot's private key verification
 - Make HTTPS management safer with Ingress server certificate pinning
 - Add templates to simulate IoT devices
+
+Dive in, explore, and help us create a more deceptive and expansive honeypot! 🔍
