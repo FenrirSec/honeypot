@@ -52,7 +52,12 @@ class Logger():
         except Exception as e:
             if DEBUG:
                 print(e)
-            line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr.host, hexlify(data).decode('UTF-8'))
+            if isinstance(data, bytes):
+                if DEBUG:
+                    print("Printing data as hex bytes instead.")
+                line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr.host, hexlify(data).decode('UTF-8'))
+            else:
+                line = "%s;%s;%s;%s;%s;%s\n" %(level, datetime.now(), protocol.name, protocol.port, addr.host, data)
         print(line)
         self.save(line)
         if INGRESS_SERVER:
